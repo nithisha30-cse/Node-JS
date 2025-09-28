@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client-side Form Validation</title>
+  <script>
+    function validateForm() {
+      let name = document.forms["myForm"]["name"].value;
+      let email = document.forms["myForm"]["email"].value;
+      let password = document.forms["myForm"]["password"].value;
+      let confirmPassword = document.forms["myForm"]["confirmPassword"].value;
+
+      // Name validation
+      if (name === "") {
+        alert("Name must be filled out");
+        return false;
+      }
+
+      // Email validation using regex
+      let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address");
+        return false;
+      }
+
+      // Password length validation
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters long");
+        return false;
+      }
+
+      // Confirm password match
+      if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return false;
+      }
+
+      return true; // Valid form
+    }
+  </script>
+</head>
+<body>
+  <h2>Registration Form with Validation</h2>
+  <form name="myForm" onsubmit="return validateForm()">
+    <label for="name">Name:</label>
+    <input type="text" name="name"><br><br>
+
+    <label for="email">Email:</label>
+    <input type="text" name="email"><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" name="password"><br><br>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" name="confirmPassword"><br><br>
+
+    <input type="submit" value="Register">
+  </form>
+</body>
+</html>
+
