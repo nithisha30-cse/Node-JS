@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client-side Validation & Cart System</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f6fa; }
+  header { background: #007bff; color: white; padding: 15px; text-align: center; }
+  main { display: flex; justify-content: space-around; padding: 20px; flex-wrap: wrap; }
+  section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); width: 400px; margin: 15px; }
+  h2 { color: #007bff; }
+  label { display: block; margin-top: 10px; }
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+    width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;
+  }
+  input[type="submit"], button {
+    margin-top: 15px; padding: 10px 15px; background: #007bff; color: white; border: none;
+    border-radius: 5px; cursor: pointer; font-size: 15px;
+  }
+  input[type="submit"]:hover, button:hover { background: #0056b3; }
+  .error { color: red; font-size: 14px; }
+  ul { list-style: none; padding: 0; }
+  li { background: #f1f1f1; margin: 5px 0; padding: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+  .total { font-weight: bold; margin-top: 10px; font-size: 18px; }
+</style>
+<script>
+// ✅ Registration Form Validation
+function validateForm(event) {
+    event.preventDefault();
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    let valid = true;
+
+    // Reset error messages
+    document.getElementById("nameError").innerHTML = "";
+    document.getElementById("emailError").innerHTML = "";
+    document.getElementById("passwordError").innerHTML = "";
+    document.getElementById("confirmError").innerHTML = "";
+
+    if (name === "") {
+        document.getElementById("nameError").innerHTML = "Name is required";
+        valid = false;
+    }
+
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("emailError").innerHTML = "Enter a valid email";
+        valid = false;
+    }
+
+    if (password.length < 6) {
+        document.getElementById("passwordError").innerHTML = "Password must be at least 6 characters";
+        valid = false;
+    }
+
+    if (password !== confirmPassword) {
+        document.getElementById("confirmError").innerHTML = "Passwords do not match";
+        valid = false;
+    }
+
+    if (valid) {
+        alert("Registration Successful! 🎉");
+        document.getElementById("myForm").reset();
+    }
+}
+
+// ✅ Cart System
+let cart = [];
+
+function addToCart(event) {
+    event.preventDefault();
+    let item = document.getElementById("item").value.trim();
+    let price = document.getElementById("price").value;
+
+    if (item && price) {
+        cart.push({ name: item, price: parseFloat(price) });
+        displayCart();
+        document.getElementById("item").value = "";
+        document.getElementById("price").value = "";
+    }
+}
+
+function displayCart() {
+    let cartList = document.getElementById("cartItems");
+    cartList.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+        cartList.innerHTML = "<li>No items in cart</li>";
+    } else {
+        cart.forEach((c, index) => {
+            total += c.price;
+            cartList.innerHTML += `
+              <li>
+                ${c.name} - $${c.price.toFixed(2)}
+                <button onclick="removeItem(${index})">❌</button>
+              </li>
+            `;
+        });
+    }
+
+    document.getElementById("totalPrice").innerText = "Total: $" + total.toFixed(2);
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    displayCart();
+}
+
+function clearCart() {
+    cart = [];
+    displayCart();
+}
+</script>
+</head>
+<body>
+
+<header>
+  <h1>Client-side Validation & Cart System</h1>
+</header>
+
+<main>
+  <!-- Registration Form -->
+  <section>
+    <h2>Registration Form</h2>
+    <form id="myForm" onsubmit="validateForm(event)">
+      <label>Name:</label>
+      <input type="text" id="name">
+      <span id="nameError" class="error"></span>
+
+      <label>Email:</label>
+      <input type="email" id="email">
+      <span id="emailError" class="error"></span>
+
+      <label>Password:</label>
+      <input type="password" id="password">
+      <span id="passwordError" class="error"></span>
+
+      <label>Confirm Password:</label>
+      <input type="password" id="confirmPassword">
+      <span id="confirmError" class="error"></span>
+
+      <input type="submit" value="Register">
+    </form>
+  </section>
+
+  <!-- Cart System -->
+  <section>
+    <h2>Cart System</h2>
+    <form onsubmit="addToCart(event)">
+      <label>Item Name:</label>
+      <input type="text" id="item" required>
+
+      <label>Price:</label>
+      <input type="number" step="0.01" id="price" required>
+
+      <input type="submit" value="Add to Cart">
+    </form>
+
+    <h3>Cart Items:</h3>
+    <ul id="cartItems">
+      <li>No items in cart</li>
+    </ul>
+    <p class="total" id="totalPrice">Total: $0.00</p>
+    <button onclick="clearCart()">Clear Cart</button>
+  </section>
+</main>
+
+</body>
+</html>
