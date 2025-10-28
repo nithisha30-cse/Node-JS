@@ -8,3 +8,22 @@ Node-JS/
 .idea/
 .DS_Store
 Thumbs.db
+# deps / builds
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+dist/
+build/
+
+# envs
+.env
+.env.*
+
+# nested repo to ignore
+Node-JS/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
